@@ -8,6 +8,6 @@ router
   .delete(controller.delete)
   .all(methodNotAllowed);
 
-router.route("/").get(controller.list).all(methodNotAllowed);
+router.route("/").all(methodNotAllowed);
 
 module.exports = router;

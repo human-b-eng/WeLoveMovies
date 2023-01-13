@@ -24,23 +24,30 @@ function isShowingList() {
       "m.image_url"
     )
     .where({ "mt.is_showing": true })
-    .groupBy("id")
+    .groupBy("id", "mt.is_showing")
 }
 
 function read(movieId) {
-  return knex("movies").where({ movie_id: movieId }).first();
+  return knex("movies").select("*").where({ movie_id: movieId }).first();
 }
 
-function listTheatersPlayingMovie(movieId) {
+function theatersPlaying(movieId) {
   return knex("theaters as t")
   .join("movies_theaters as mt", "mt.theater_id", "t.theater_id")
   .join("movies as m", "m.movie_id", "mt.movie_id")
   .where({"m.movie_id": movieId})
 }
 
+function movieReviews(movieId) {
+  return knex("reviews as r")
+  .join("movies as m", "m.movie_id", "r.movie_id")
+  .where({"r.movie_id": movieId})
+}
+
 module.exports = {
   list,
   isShowingList,
   read,
-  listTheatersPlayingMovie
+  theatersPlaying,
+  movieReviews,
 };

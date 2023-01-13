@@ -1,17 +1,22 @@
-const router = require("express").Router();
+const router = require("express").Router({ mergeParams: true });
 const controller = require("./movies.controller");
 const methodNotAllowed = require("../errors/methodNotAllowed");
-const reviewsRouter = require("../reviews/reviews.router");
+const cors = require("cors");
 
-router.use("/:movieId/reviews", controller.movieExists, reviewsRouter);
+router.route("/")
+    .get(cors(), controller.list)
+    .all(methodNotAllowed);
 
-router
-  .route("/:movieId/theaters")
-  .get(controller.listTheatersPlayingMovie)
-  .all(methodNotAllowed);
+router.route("/:movieId")
+    .all(cors())
+    .get(controller.read)
 
-router.route("/:movieId").get(controller.read).all(methodNotAllowed);
+router.route("/:movieId/theaters")
+    .all(cors())
+    .get(controller.theatersPlaying)
 
-router.route("/").get(controller.list).all(methodNotAllowed);
+router.route("/:movieId/reviews")
+    .all(cors())
+    .get(controller.movieReviews)
 
 module.exports = router;

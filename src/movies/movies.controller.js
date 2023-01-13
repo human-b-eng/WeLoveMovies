@@ -26,14 +26,23 @@ async function read(req, res) {
   res.json({ data: res.locals.movie });
 }
 
-async function listTheatersPlayingMovie(req, res) {
-  const data = await service.listTheatersPlayingMovie(req.params.movieId);
+async function theatersPlaying(req, res) {
+  const data = await service.theatersPlaying(req.params.movieId);
   res.json({ data })
+}
+
+async function movieReviews(req, res) {
+  const data = await service.movieReviews(res.locals.movie.movie_id);
+  res.json({ data });
 }
 
 module.exports = {
   list: asyncErrorBoundary(list),
   read: [asyncErrorBoundary(movieExists), asyncErrorBoundary(read)],
-  listTheatersPlayingMovie: [asyncErrorBoundary(movieExists), asyncErrorBoundary(listTheatersPlayingMovie)],
+  theatersPlaying: [asyncErrorBoundary(movieExists), asyncErrorBoundary(theatersPlaying)],
   movieExists,
+  movieReviews: [
+    asyncErrorBoundary(movieExists),
+    asyncErrorBoundary(movieReviews),
+  ],
 };

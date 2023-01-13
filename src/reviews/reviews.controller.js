@@ -54,15 +54,6 @@ async function destroy(req, res) {
   res.sendStatus(204);
 }
 
-async function list(req, res) {
-  const reviewsData = await service.list(req.params.movieId);
-  const data = reviewsData.map(async (review) => {
-    const criticData = await service.readCritic(review.critic_id);
-    return { ...review, critic: criticData };
-  });
-  res.json({ data: await Promise.all(data) });
-}
-
 module.exports = {
   update: [
     asyncErrorBoundary(reviewExists),
@@ -70,5 +61,4 @@ module.exports = {
     asyncErrorBoundary(update),
   ],
   delete: [asyncErrorBoundary(reviewExists), asyncErrorBoundary(destroy)],
-  list: asyncErrorBoundary(list),
 };
